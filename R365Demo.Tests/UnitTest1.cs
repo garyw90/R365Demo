@@ -100,5 +100,10 @@ namespace R365Demo.Tests
         {
             Add("//[***]\n1***2***3", 6);
         }
+
+        public void MultipleDelimiters()
+        {
+            Add("//[*][%]\n1*2%3", 6);
+        }
     }
 }
