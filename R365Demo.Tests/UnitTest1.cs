@@ -47,5 +47,11 @@ namespace R365Demo.Tests
         {
             Add("1,2,3,4,5", 15);
         }
+
+        [TestMethod]
+        public void WithNewlines()
+        {
+            Add("1\n2,3", 6);
+        }
     }
 }
