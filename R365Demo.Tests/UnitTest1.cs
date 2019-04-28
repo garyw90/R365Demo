@@ -74,5 +74,19 @@ namespace R365Demo.Tests
         {
             Add("//;;\n1;2", 3);
         }
+
+        [TestMethod]
+        public void WithNegativeNumbers()
+        {
+            try
+            {
+                Add("1, -3, -6, 8", 9);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(ArgumentException));
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

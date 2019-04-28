@@ -1,7 +1,9 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace R365Demo
@@ -34,10 +36,20 @@ namespace R365Demo
                 if (text.EndsWith(","))
                     throw new ArgumentException("Input cannot end with commas at the end of the line", nameof(numbers));
                 string[] parts = text.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
+                List<int> negativeNumbers = new List<int>();
                 foreach (string item in parts)
                 {
-                    if (int.TryParse(item, out var value))
-                        result += value;
+                    if (int.TryParse(item.Trim(), out var value))
+                    {
+                        if (value < 0)
+                            negativeNumbers.Add(value);
+                        else
+                            result += value;
+                    }
+                }
+                if (negativeNumbers.Any())
+                {
+                    throw new ArgumentException($"Negative numbers are not allowed: {string.Join(",", negativeNumbers)}", nameof(numbers));
                 }
             }
             return result;
