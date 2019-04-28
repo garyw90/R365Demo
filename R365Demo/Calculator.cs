@@ -29,12 +29,20 @@ namespace R365Demo
                 if (delimiterText[0] == '[' && delimiterText[delimiterText.Length - 1] == ']')
                 {
                     LongDelimiter = new List<string>();
-                    Regex re = new Regex(@"\[.*\]");
-                    Match match = re.Match(delimiterText);
-                    while (match.Success)
+                    int startIndex = 1;
+                    int index = delimiterText.IndexOf(']');
+                    while (index > 0)
                     {
-                        LongDelimiter.Add(match.Value.Substring(1, match.Value.Length - 2));
-                        match = match.NextMatch();
+                        LongDelimiter.Add(delimiterText.Substring(startIndex, index - startIndex));
+                        startIndex = index + 1;
+                        if (startIndex == delimiterText.Length)
+                            index = -1;
+                        else
+                        {
+                            if (delimiterText[startIndex] != '[')
+                                throw new ArgumentException("Invalid multiple delimiter format, [ expected", nameof(text));
+                            index = delimiterText.IndexOf(']', ++startIndex);
+                        }
                     }
                 }
                 else
@@ -55,18 +63,25 @@ namespace R365Demo
                 if (LongDelimiter != null)
                 {
                     List<string> numberList = new List<string>();
-                    int startIndex = 0;
-                    string delimiter = FindDelimiter(text, startIndex);
-                    int index = text.IndexOf(delimiter, startIndex);
+                    int index = 0;
                     while (index >= 0)
                     {
+                        int startIndex = index;
+                        while (index < text.Length && char.IsDigit(text[index]))
+                            index++;
                         numberList.Add(text.Substring(startIndex, index - startIndex));
-                        startIndex = index + delimiter.Length;
-                        delimiter = FindDelimiter(text, startIndex);
-                        index = delimiter == null ? -1 : text.IndexOf(delimiter, startIndex);
+                        if (index == text.Length)
+                            index = -1;
+                        else
+                        {
+                            startIndex = index;
+                            while (index < text.Length && !char.IsDigit(text[index]))
+                                index++;
+                            string delimiter = text.Substring(startIndex, index - startIndex);
+                            if (LongDelimiter.FirstOrDefault(x => x == delimiter) == null)
+                                throw new ArgumentException("Invalid characters found, not a valid delimiter", nameof(text));
+                        }
                     }
-                    if (startIndex < text.Length)
-                        numberList.Add(text.Substring(startIndex));
                     parts = numberList.ToArray();
                 }
                 else

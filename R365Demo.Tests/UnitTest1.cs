@@ -101,9 +101,16 @@ namespace R365Demo.Tests
             Add("//[***]\n1***2***3", 6);
         }
 
+        [TestMethod]
         public void MultipleDelimiters()
         {
             Add("//[*][%]\n1*2%3", 6);
+        }
+
+        [TestMethod]
+        public void MultipleLongDelimiters()
+        {
+            Add("//[***][$$$][@]\n1$$$2@3***4", 10);
         }
     }
 }
