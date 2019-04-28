@@ -94,5 +94,11 @@ namespace R365Demo.Tests
         {
             Add("1,5,2003", 6);
         }
+
+        [TestMethod]
+        public void LongDelimiter()
+        {
+            Add("//[***]\n1***2***3", 6);
+        }
     }
 }
