@@ -43,7 +43,7 @@ namespace R365Demo
                     {
                         if (value < 0)
                             negativeNumbers.Add(value);
-                        else
+                        else if (value <= 1000)
                             result += value;
                     }
                 }

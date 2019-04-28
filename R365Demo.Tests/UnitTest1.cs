@@ -88,5 +88,11 @@ namespace R365Demo.Tests
                 Console.WriteLine(ex.Message);
             }
         }
+
+        [TestMethod]
+        public void BigNumbers()
+        {
+            Add("1,5,2003", 6);
+        }
     }
 }
