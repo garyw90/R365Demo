@@ -25,7 +25,6 @@ namespace R365Demo.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ThreeNumbers()
         {
             Add("1, 5, 9", 15);
@@ -41,6 +40,12 @@ namespace R365Demo.Tests
         public void WithLetters()
         {
             Add("1,b", 1);
+        }
+
+        [TestMethod]
+        public void FiveNumbers()
+        {
+            Add("1,2,3,4,5", 15);
         }
     }
 }
