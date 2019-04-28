@@ -1,12 +1,7 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace R365Demo
 {
@@ -91,11 +86,10 @@ namespace R365Demo
             }
         }
 
-        public int Add(string numbers)
+        private void GetNumbers(string numbers, Action<int> operation)
         {
             if (numbers == null)
                 throw new ArgumentNullException(nameof(numbers));
-            int result = 0;
             StringReader reader = new StringReader(numbers);
             Delimiters delimiter = new Delimiters();
             string text;
@@ -113,25 +107,67 @@ namespace R365Demo
                     if (text.EndsWith(","))
                         throw new ArgumentException("Input cannot end with commas at the end of the line", nameof(numbers));
                     string[] parts = delimiter.GetNumbers(text);
-                    List<int> negativeNumbers = new List<int>();
                     foreach (string item in parts)
                     {
                         if (int.TryParse(item.Trim(), out var value))
                         {
-                            if (value < 0)
-                                negativeNumbers.Add(value);
-                            else if (value <= 1000)
-                                result += value;
+                            operation(value);
                         }
-                    }
-                    if (negativeNumbers.Any())
-                    {
-                        throw new ArgumentException($"Negative numbers are not allowed: {string.Join(",", negativeNumbers)}", nameof(numbers));
                     }
                 }
                 lineNumber++;
             }
+        }
+        public int Add(string numbers)
+        {
+            int result = 0;
+            List<int> negativeNumbers = new List<int>();
+            GetNumbers(numbers, (value) =>
+            {
+                if (value < 0)
+                    negativeNumbers.Add(value);
+                else if (value <= 1000)
+                    result += value;
+            });
+            if (negativeNumbers.Any())
+            {
+                throw new ArgumentException($"Negative numbers are not allowed: {string.Join(",", negativeNumbers)}", nameof(numbers));
+            }
             return result;
+        }
+
+        public int Calculate(Operation op, string numbers)
+        {
+            int? result = null;
+            GetNumbers(numbers, (value) =>
+            {
+                switch (op)
+                {
+                    case Operation.Add:
+                        if (!result.HasValue)
+                            result = 0;
+                        result += value;
+                        break;
+                    case Operation.Subtract:
+                        if (!result.HasValue)
+                            result = value;
+                        else
+                            result -= value;
+                        break;
+                    case Operation.Multiply:
+                        if (!result.HasValue)
+                            result = 1;
+                        result *= value;
+                        break;
+                    case Operation.Divide:
+                        if (!result.HasValue)
+                            result = value;
+                        else
+                            result /= value;
+                        break;
+                }
+            });
+            return result.GetValueOrDefault();
         }
     }
 }

@@ -112,5 +112,29 @@ namespace R365Demo.Tests
         {
             Add("//[***][$$$][@]\n1$$$2@3***4", 10);
         }
+
+        [TestMethod]
+        public void CalculateAdder()
+        {
+            Calculate(Operation.Add, "1,2,3", 6);
+        }
+
+        [TestMethod]
+        public void CalculateSubstracter()
+        {
+            Calculate(Operation.Subtract, "10,3,2", 5);
+        }
+
+        [TestMethod]
+        public void CalculateMultiplier()
+        {
+            Calculate(Operation.Multiply, "10,2,3", 60);
+        }
+
+        [TestMethod]
+        public void CalculateDivider()
+        {
+            Calculate(Operation.Divide, "100,5,5", 4);
+        }
     }
 }

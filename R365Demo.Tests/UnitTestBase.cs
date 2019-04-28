@@ -23,5 +23,11 @@ namespace R365Demo.Tests
             string failureReason = $"The expected result should be {expected}, the actual result as {actual}";
             Assert.IsTrue(actual == expected, failureReason);
         }
+        protected void Calculate(Operation operation, string numbers, int expected)
+        {
+            int actual = CalculatorInstance.Calculate(operation, numbers);
+            string failureReason = $"The expected result should be {expected}, the actual result as {actual}";
+            Assert.IsTrue(actual == expected, failureReason);
+        }
     }
 }
