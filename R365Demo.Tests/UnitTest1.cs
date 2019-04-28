@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Authentication.ExtendedProtection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace R365Demo.Tests
@@ -52,6 +53,26 @@ namespace R365Demo.Tests
         public void WithNewlines()
         {
             Add("1\n2,3", 6);
+        }
+
+        [TestMethod]
+        public void WithDelimiter()
+        {
+            Add("//;\n1;2", 3);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void MissingDelimiter()
+        {
+            Add("//\n1;2", 3);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TooManyDelimiters()
+        {
+            Add("//;;\n1;2", 3);
         }
     }
 }
